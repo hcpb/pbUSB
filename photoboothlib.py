@@ -117,17 +117,18 @@ def grab_image(filename, i, usecamera=True):
 	if i in range(4): 
 		# grab from camera or make a copy of the dummy images (for testing...)
 		buff = StringIO()	# create StringIO buffer for stashing image data
-		for jj in range(10):
+		for jj in range(3 ):
 			select.select((video,), (), ())
 			image_data = video.read_and_queue()	# grab image from camera
 			buff.write(image_data)			# stash in buff
 			buff.seek(0)				# reset file pointer to zero...
 			im = Image.open(buff)			# read image from buff
 			buff.seek(0)
-		im.save(filename+'_'+suffix[i]+'.jpg')
+		ix, iy = im.size
+		im.crop( (100, 0, ix-100, iy) ).resize( (1620, 1080), Image.ANTIALIAS ).save(filename+'_'+suffix[i]+'.jpg')
 
 	# create flag file indicating that photo file download from camera completed...
-	shellcmd('gm convert -shave 100x0 '+filename+'_'+suffix[i]+'.jpg '+filename+'_'+suffix[i]+'.jpg')
+	#shellcmd('gm convert -shave 100x0 '+filename+'_'+suffix[i]+'.jpg '+filename+'_'+suffix[i]+'.jpg')
 	open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
 
 
@@ -155,8 +156,12 @@ def move_files(filename, path='/media/PHOTOBOOTH/', copy=True):
 #size = width, height = 960, 540
 #camerasize = camw, camh =  810,540
 size = width, height = 1920, 1080
+#size = width, height = 1280, 1024
+scrsize = scrw, scrh =  1920, 1080
+scrloc = (width-scrw)/2, (height-scrh)/2
 #camerasize = camw, camh =  1280, 720
-camerasize = camw, camh =  1080, 720
+#camerasize = camw, camh =  1080, 720
+camerasize = camw, camh =  1620, 1080
 cameraloc = (width-camw)/2, (height-camh)/2
 #dispsize = disw, dish = 1056, 720
 dispsize = disw, dish = 1584, 1080

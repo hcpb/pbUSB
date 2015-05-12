@@ -54,7 +54,7 @@ else:
 	display = True
 
 # use sepia tone...
-default_tone = ''
+default_tone = '1x3'
 if 'sepia' in sys.argv and not('bw' in sys.argv):
 	default_tone = '-sepia'
 if 'bw' in sys.argv and not('sepia' in sys.argv):
@@ -133,7 +133,6 @@ print 'tone:', repr(default_tone)
 if display:
 	pygame.init()
 	screen = pygame.display.set_mode(size)
-	#toggle_fullscreen()
 
 startvid()
 
@@ -147,9 +146,9 @@ for element in loop:
 	#showtext(screen, "Push a button to ", 100)
 	if display:
 		if default_tone in ['-1x3', '-2x3', '-4x6']:
-			displayimage(screen, 'images/pushtostart-nochoice.jpg', size)
+			displayimage(screen, 'images/pushtostart-nochoice.jpg', scrsize, scrloc)
 		else:	
-			displayimage(screen, 'images/pushtostart.jpg', size)
+			displayimage(screen, 'images/pushtostart.jpg', scrsize, scrloc)
 
 		key = waitforkey([K_g, K_r, K_y])	
 	if default_tone=='':
@@ -169,7 +168,7 @@ for element in loop:
 		fillscreen(screen, black)
 
 	if display:
-		displayimage(screen, 'images/fourphotostaken.jpg', size)
+		displayimage(screen, 'images/fourphotostaken.jpg', scrsize, scrloc)
 		time.sleep(3.0)
 		fillscreen(screen, black)
 
@@ -196,7 +195,7 @@ for element in loop:
 	for i in range(4):
 		if display:
 			#showtext(screen, 'Image: '+str(i+1), 100)
-			displayimage(screen, 'images/image'+str(i+1)+'.jpg', size)
+			displayimage(screen, 'images/image'+str(i+1)+'.jpg', scrsize, scrloc)
 			#time.sleep(0.75)
 			blinklenslight()
 		print 
@@ -235,6 +234,10 @@ for element in loop:
 			print 'time to display:', time.time()-start
 			if display: 
 				displayimage(screen, filename+'_display'+tone+'.jpg', dispsize, disploc)
+				disptime = time.time()
+
+	if time.time() - disptime < 10:
+		time.sleep(10 - (time.time() - disptime) ) 
 
 	print '\r\nAll images done:', time.time()-start
 	time.sleep(1)
